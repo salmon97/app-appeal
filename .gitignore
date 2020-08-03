@@ -1,0 +1,39 @@
+ HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!/src/main/
+!/src/test/
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+'.idea'
+'*.mvn'
+app-appeal-server/.mvn
+app-appeal-server/mvnw
+app-appeal-server/mvnw.cmd
+app-appeal-server/target
+app-appeal-server/web
+app-appeal-server/app-duonotary-server.iml
+node_modules/**.idea
