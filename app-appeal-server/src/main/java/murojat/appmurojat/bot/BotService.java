@@ -51,7 +51,7 @@ public class BotService {
     @Value("${upload.folder}")
     private String uploadFolder;
 
-    public void manmnunVsMamnumemas(String id,Status status){
+    public void mamnunVsMamnunmemas(String id,Status status){
         Murojaatlar murojaatlar = murojaatlarRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("getMurojaat"));
         murojaatlar.setStatus(status);
         murojaatlarRepository.save(murojaatlar);
@@ -349,7 +349,7 @@ public class BotService {
             fileMurojaatRepository.save(fileMurojaat);
             downloadFile(fileMurojaat, resFile.getFilePath(), resFile.getFileSize());
         }
-        murojaatlar.setStatus(Status.READY);
+        murojaatlar.setStatus(Status.NO_RECEIVE);
         num++;
         DecimalFormat decimalFormat = new DecimalFormat("0000");
         String no = decimalFormat.format(num);

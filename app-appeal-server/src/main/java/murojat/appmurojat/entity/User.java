@@ -34,6 +34,8 @@ public class User extends AbsEntity implements UserDetails {
 
     private String registerCode;
 
+    private String registerCodeAdmin;
+
     private String forgotPassword;
 
     @ManyToMany(fetch = FetchType.LAZY)

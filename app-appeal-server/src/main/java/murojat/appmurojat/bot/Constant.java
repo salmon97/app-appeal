@@ -2,6 +2,7 @@ package murojat.appmurojat.bot;
 
 public interface Constant {
     String CHECKED = "Мурожаaтни ёпиш";
+    String RECEIVE = "қабул қилдим";
     String CHOOSE_CATEGORY = "Мурожаaт Йўллашини Танланг";
 
     String START_MUROJAAT = "Мурожаaт йўллаш";

@@ -37,7 +37,7 @@ class ApplicationCom extends Component {
                   <td>{item.category}</td>
                   <td>{item.district}</td>
                   <td>{item.code}</td>
-                  <td>{item.status === 'CHECKED' ? 'ёпилган' : item.status === 'NO_CHECKED' ? 'ёпилмаган' : 'корилётган'}</td>
+                  <td>{item.status === 'CHECKED' ? 'ёпилган' : item.status === 'NO_CHECKED' ? 'ёпилмаган' : item.status === 'NO_RECEIVE' ? 'қабул қилинмаган' : item.status === 'RECEIVE' ? 'қабул қилинган' : ''}</td>
                   <td>
                     <button className="btn btn-success text-light" onClick={() => openMainApplic(item)}>open</button>
                   </td>
@@ -64,37 +64,37 @@ class ApplicationCom extends Component {
             <h4>Murojaat</h4>
           </ModalHeader>
           <ModalBody className="text-center">
-            {mainApplication.text !=null ?
-              <h4>{mainApplication.text}</h4>:mainApplication.fileType ==='ФОТО'?
-                <div style={{height:'250px', width: '250px'}}>
+            {mainApplication.text != null ?
+              <h4>{mainApplication.text}</h4> : mainApplication.fileType === 'ФОТО' ?
+                <div style={{height: '250px', width: '250px'}}>
                   <img className="img-fluid"
                        src={`${URLGETFILE}${mainApplication.fileId}`}
                        alt=""/>
                 </div>
-                :mainApplication.fileType==='voice'?
+                : mainApplication.fileType === 'voice' ?
                   <div>
                     <audio controls>
                       <source src={`${URLGETFILE}${mainApplication.fileId}`}/>
                     </audio>
                   </div>
-                  :mainApplication.fileType==='videoNote'?
+                  : mainApplication.fileType === 'videoNote' ?
                     <div>
                       <video width="320" height="240" controls>
                         <source src={`${URLGETFILE}${mainApplication.fileId}`}/>
                       </video>
                     </div>
-                    :mainApplication.fileType==='АУДИО'?
+                    : mainApplication.fileType === 'АУДИО' ?
                       <div>
                         <audio controls>
                           <source src={`${URLGETFILE}${mainApplication.fileId}`}/>
                         </audio>
                       </div>
-                      :mainApplication.fileType==='ВИДЕО'?
+                      : mainApplication.fileType === 'ВИДЕО' ?
                         <div>
                           <video width="320" height="240" controls>
                             <source src={`${URLGETFILE}${mainApplication.fileId}`}/>
                           </video>
-                        </div> :''
+                        </div> : ''
             }
           </ModalBody>
           <ModalFooter>
