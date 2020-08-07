@@ -20,6 +20,7 @@ class ApplicationCom extends Component {
                 <th>№</th>
                 <th>дата</th>
                 <th>тел номер</th>
+                <th>қаердан</th>
                 <th>категоря</th>
                 <th>худуд</th>
                 <th>код</th>
@@ -29,15 +30,17 @@ class ApplicationCom extends Component {
               </tr>
               </thead>
               <tbody>
+              {console.log(applications)}
               {applications.map((item, i) =>
                 <tr key={item.id}>
                   <td>{i + 1}</td>
                   <td>{item.created_at}</td>
                   <td>{item.phoneNumber}</td>
+                  <td>{item.source}</td>
                   <td>{item.category}</td>
                   <td>{item.district}</td>
                   <td>{item.code}</td>
-                  <td>{item.status === 'CHECKED' ? 'ёпилган' : item.status === 'NO_CHECKED' ? 'ёпилмаган' : item.status === 'NO_RECEIVE' ? 'қабул қилинмаган' : item.status === 'RECEIVE' ? 'қабул қилинган' : ''}</td>
+                  <td>{item.status === 'CHECKED' ? 'ёпилган' : item.status === 'NO_CHECKED' ? 'ёпилмаган' : item.status === 'NO_RECEIVE' ? 'қабул қилинмаган' : item.status === 'RECEIVE' ? 'қабул қилинган' : 'якунланмаган'}</td>
                   <td>
                     <button className="btn btn-success text-light" onClick={() => openMainApplic(item)}>open</button>
                   </td>

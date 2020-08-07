@@ -29,6 +29,8 @@ public class Murojaatlar extends AbsEntity {
 
     private String category;
 
+    private String source;
+
     private String code;
 
     @Column(columnDefinition = "text")

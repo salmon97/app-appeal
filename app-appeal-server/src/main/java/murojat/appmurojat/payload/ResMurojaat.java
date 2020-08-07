@@ -24,6 +24,7 @@ public class ResMurojaat {
    private String fileType;
    private Status status;
    private UUID fileId;
+   private String source;
 
    public ResMurojaat(String definition, String code, UUID id, String created_at, String text, String mainMurojaat, String phoneNumber, String category, String district, String fileType) {
       this.definition = definition;
@@ -38,7 +39,7 @@ public class ResMurojaat {
       this.fileType = fileType;
    }
 
-   public ResMurojaat(UUID id, String created_at, String text, String phoneNumber, String category, String district, String code,Status status,String fileType,UUID fileId) {
+   public ResMurojaat(UUID id, String created_at, String text, String phoneNumber, String category, String district, String code,Status status,String fileType,UUID fileId,String source) {
       this.id = id;
       this.created_at = created_at;
       this.text = text;
@@ -49,5 +50,6 @@ public class ResMurojaat {
       this.status =status;
       this.fileType =fileType;
       this.fileId = fileId;
+      this.source = source;
    }
 }

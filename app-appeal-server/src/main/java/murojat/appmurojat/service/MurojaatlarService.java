@@ -41,7 +41,8 @@ public class MurojaatlarService {
                 murojaatlar.getCode(),
                 murojaatlar.getStatus(),
                 byMurojaatlar_id != null ? byMurojaatlar_id.getFileType() : null,
-                byMurojaatlar_id != null ? byMurojaatlar_id.getId() : null
+                byMurojaatlar_id != null ? byMurojaatlar_id.getId() : null,
+                murojaatlar.getSource()
         );
     }
 

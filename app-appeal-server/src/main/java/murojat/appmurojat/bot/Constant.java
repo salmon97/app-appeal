@@ -1,11 +1,17 @@
 package murojat.appmurojat.bot;
 
 public interface Constant {
+
+    String FACEBOOK = "Facebook";
+    String INSTAGRAM = "Instagram";
+    String TELEGRAM_BOT = "Telegram_bot";
+    String CHOOSE_SOURCE = "мурожаат манбасини танланг";
     String CHECKED = "Мурожаaтни ёпиш";
     String RECEIVE = "қабул қилдим";
     String CHOOSE_CATEGORY = "Мурожаaт Йўллашини Танланг";
 
     String START_MUROJAAT = "Мурожаaт йўллаш";
+    String START_MUROJAATADMIN = "Мурожаaтни йўллаш";
     String CHOOSE_DISTRICT = "Туман танланг";
     String CLOSE_APPLICATION = "Сиз йўллаган мурожаат дан мумнун бўлсангиз \"Мамнун ман\" мамнун бўлмасангиз \"мамнун эмасман\" тугмасини босинг";
     String MAMNUNMAN ="мамнун ман";

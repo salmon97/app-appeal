@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import murojat.appmurojat.entity.template.AbsEntity;
+import murojat.appmurojat.entity.template.AbsNameEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @EqualsAndHashCode(callSuper = true)
@@ -14,14 +14,11 @@ import javax.persistence.Entity;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Staff extends AbsEntity {
+public class ChildAdmin extends AbsEntity {
 
     private String name;
 
     private String phoneNumber;
 
-    @Column(unique = true)
     private Long chatId;
-
-    private String category;
 }

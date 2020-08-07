@@ -286,7 +286,10 @@ public class BotService {
         Message message = update.getMessage();
         GetFile getFile = new GetFile();
         if (message.hasText()) {
-            murojaatlar.setMurojaatText(update.getMessage().getText());
+            murojaatlar.setMurojaatText(message.getText());
+        }
+        if (message.getCaption() != null){
+            murojaatlar.setMurojaatText(message.getCaption());
         }
         if (message.hasPhoto()) {
             fileMurojaat.setMurojaatlar(murojaatlar);
@@ -400,7 +403,7 @@ public class BotService {
         is.close();
     }
 
-    private String getExt(String fileName) {
+    public String getExt(String fileName) {
         String ext = null;
         if (fileName != null && !fileName.isEmpty()) {
             int dot = fileName.lastIndexOf(".");
