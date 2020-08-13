@@ -1,13 +1,15 @@
 package murojat.appmurojat.bot;
 
 public interface Constant {
-
+    String INLINE_QUERY = "";
+    String RECEIVE_QUERY = "qabulQildimQuery";
     String FACEBOOK = "Facebook";
     String INSTAGRAM = "Instagram";
+    String PERSONAL = "personal";
     String TELEGRAM_BOT = "Telegram_bot";
     String CHOOSE_SOURCE = "мурожаат манбасини танланг";
     String CHECKED = "Мурожаaтни ёпиш";
-    String RECEIVE = "қабул қилдим";
+    String RECEIVE = "қабул қилиш";
     String CHOOSE_CATEGORY = "Мурожаaт Йўллашини Танланг";
 
     String START_MUROJAAT = "Мурожаaт йўллаш";

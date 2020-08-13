@@ -1,29 +1,121 @@
 package murojat.appmurojat.bot;
 
+import lombok.SneakyThrows;
 import murojat.appmurojat.entity.ChildAdmin;
-import murojat.appmurojat.entity.Staff;
+import murojat.appmurojat.entity.FileMurojaat;
+import murojat.appmurojat.entity.Murojaatlar;
+import murojat.appmurojat.entity.enums.Status;
 import murojat.appmurojat.repository.ChildAdminRepository;
+import murojat.appmurojat.repository.FileMurojaatRepository;
+import murojat.appmurojat.repository.MurojaatlarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResult;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ChildAdminBotService {
 
+
+    @Value("${upload.folder}")
+    private String uploadFolder;
+
     @Autowired
     ChildAdminRepository childAdminRepository;
+
+    @Autowired
+    BotService botService;
+
+    @Autowired
+    MurojaatBot murojaatBot;
+
+    @Autowired
+    MurojaatlarRepository murojaatlarRepository;
+
+    int num = 0;
+
+    @Autowired
+    FileMurojaatRepository fileMurojaatRepository;
+
+    public EditMessageReplyMarkup queryRecive(Update update,String id){
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> replyKeyboarbuttons = new ArrayList<>();
+        List<InlineKeyboardButton> inlineKeyboardButtonList1 = new ArrayList<>();
+        InlineKeyboardButton inlineButton = new InlineKeyboardButton("қабул килдим");
+        inlineButton.setCallbackData("data0001");
+        inlineKeyboardButtonList1.add(inlineButton);
+        replyKeyboarbuttons.add(inlineKeyboardButtonList1);
+        inlineKeyboardMarkup.setKeyboard(replyKeyboarbuttons);
+        EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
+        System.out.println(update.getCallbackQuery());
+//        editMessageReplyMarkup.setChatId(update.getCallbackQuery().getMessage().getChatId());
+//        editMessageReplyMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+        editMessageReplyMarkup.setInlineMessageId(update.getCallbackQuery().getInlineMessageId());
+        editMessageReplyMarkup.setReplyMarkup(inlineKeyboardMarkup);
+        Murojaatlar murojaatlar = murojaatlarRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("getMurojaat"));
+        murojaatlar.setStatus(Status.RECEIVE);
+        murojaatlarRepository.save(murojaatlar);
+        return editMessageReplyMarkup;
+    }
+
+    public AnswerInlineQuery inlineQuery(Update update,String text) {
+        InlineQueryResultArticle r2 = new InlineQueryResultArticle();
+        r2.setThumbUrl("https://lh3.googleusercontent.com/proxy/JY51Lom4L6hmW7d0DzBfnxPtQaXmGmP-FWZbRw-c3RyOqbqIIGL10oVlEPZ5021etF7Tgajjp3PYjxffFJ7iGX_P");
+        r2.setTitle("мурожаат йўллаш");
+        r2.setId("1");
+        r2.setDescription("мурожаат йўллаш учун устига босингг");
+        r2.setInputMessageContent(new InputTextMessageContent().setMessageText(text));
+        r2.setReplyMarkup(murojaatSave(text));
+        List<InlineQueryResult> inlineQueryResults = new ArrayList<>();
+        inlineQueryResults.add(r2);
+        AnswerInlineQuery answerInlineQuery = new AnswerInlineQuery();
+        answerInlineQuery.setInlineQueryId(update.getInlineQuery().getId());
+        answerInlineQuery.setResults(inlineQueryResults);
+        return answerInlineQuery;
+    }
+
+    public InlineKeyboardMarkup murojaatSave(String text) {
+        Murojaatlar murojaatlar = new Murojaatlar();
+        murojaatlar.setMurojaatText(text);
+        murojaatlar.setStatus(Status.NO_RECEIVE);
+        murojaatlar.setSource(Constant.PERSONAL);
+        murojaatlar.setMurojaatText(murojaatlar.getMurojaatText());
+        murojaatlarRepository.save(murojaatlar);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> replyKeyboarbuttons = new ArrayList<>();
+        List<InlineKeyboardButton> inlineKeyboardButtonList1 = new ArrayList<>();
+        InlineKeyboardButton b = new InlineKeyboardButton(Constant.RECEIVE);
+        b.setCallbackData(Constant.RECEIVE_QUERY +"/"+ murojaatlar.getId().toString());
+        inlineKeyboardButtonList1.add(b);
+        replyKeyboarbuttons.add(inlineKeyboardButtonList1);
+        inlineKeyboardMarkup.setKeyboard(replyKeyboarbuttons);
+        return inlineKeyboardMarkup;
+    }
+
 
     public SendMessage shareContact(Update update) {
         SendMessage sendMessage = new SendMessage()
@@ -65,7 +157,7 @@ public class ChildAdminBotService {
         return sendMessage;
     }
 
-    public SendMessage registerName(Update update){
+    public SendMessage registerName(Update update) {
         ChildAdmin childAdmin = new ChildAdmin();
         if (update.hasMessage()) {
             childAdmin.setChatId(update.getMessage().getChatId());
@@ -77,7 +169,7 @@ public class ChildAdminBotService {
                 .setParseMode(ParseMode.MARKDOWN);
     }
 
-    public void saveName(Update update){
+    public void saveName(Update update) {
         ChildAdmin byChatId = childAdminRepository.getByChatId(update.getMessage().getChatId());
         byChatId.setName(update.getMessage().getText());
         childAdminRepository.save(byChatId);
@@ -121,5 +213,45 @@ public class ChildAdminBotService {
         inlineKeyboardMarkup.setKeyboard(lists);
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
+    }
+
+    @SneakyThrows
+    public void downloadFile(FileMurojaat fileMurojaat, String filePath, int fileSize) {
+        Date data = new Date();
+        File uploadFolders = new File(String.format("%s/upload_files/%d/%d/%d/", uploadFolder,
+                1900 + data.getYear(), 1 + data.getMonth(), data.getDate()));
+        if (!uploadFolders.exists() && uploadFolders.mkdirs()) {
+            System.out.println("aytilgan papka ochildi");
+        }
+
+        fileMurojaat.setUploadPath(String.format(uploadFolder + "upload_files/%d/%d/%d/%s.%s", 1900 + data.getYear(), 1 + data.getMonth(), data.getDate(),
+                fileMurojaat.getId(), fileMurojaat.getExtension()));
+
+        uploadFolders = uploadFolders.getAbsoluteFile();
+        File file = new File(uploadFolders, String.format("%s.%s", fileMurojaat.getId(), fileMurojaat.getExtension()));
+        fileMurojaatRepository.save(fileMurojaat);
+        URL url = new URL(filePath);
+        URLConnection connection = url.openConnection();
+        InputStream is = connection.getInputStream();
+        FileOutputStream fos = new FileOutputStream(file);
+        byte[] buffer = new byte[fileSize];
+        int read = 0;
+        while ((read = is.read(buffer, 0, buffer.length)) >= 0) {
+            fos.write(buffer, 0, read);
+        }
+        fos.flush();
+        fos.close();
+        is.close();
+    }
+
+    public String getExt(String fileName) {
+        String ext = null;
+        if (fileName != null && !fileName.isEmpty()) {
+            int dot = fileName.lastIndexOf(".");
+            if (dot > 0 && dot <= fileName.length() - 2) {
+                ext = fileName.substring(dot + 1);
+            }
+        }
+        return ext;
     }
 }

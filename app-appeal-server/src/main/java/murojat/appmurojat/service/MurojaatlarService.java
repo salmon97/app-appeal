@@ -1,6 +1,5 @@
 package murojat.appmurojat.service;
 
-import murojat.appmurojat.bot.Constant;
 import murojat.appmurojat.entity.FileMurojaat;
 import murojat.appmurojat.entity.Murojaatlar;
 import murojat.appmurojat.entity.enums.Status;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,19 +45,18 @@ public class MurojaatlarService {
     }
 
 
-    public UUID deleteStaff(UUID id) {
+    public void deleteAppliction(UUID id) {
         FileMurojaat byMurojaatlar_id = fileMurojaatRepository.findByMurojaatlar_Id(id);
         if (byMurojaatlar_id != null) {
             File file = new File(byMurojaatlar_id.getUploadPath());
             file.delete();
         }
         murojaatlarRepository.deleteById(id);
-        return id;
     }
 
-    public ResPageable pageableDetails(int page, int size) {
+    public ResPageable pageableDetails(int page, int size,String source) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Murojaatlar> allByStatus = murojaatlarRepository.findAll(pageable);
+        Page<Murojaatlar> allByStatus = murojaatlarRepository.findAllBySourceAndStatusNot(source,Status.NO_READY,pageable);
         return new ResPageable(
                 page, size,
                 allByStatus.getTotalElements(),

@@ -58,10 +58,10 @@ const bolta = (uroq) => {
 
 export default function request(ketmon) {
   return bolta(ketmon).then(res => {
-    const {statusText, status, data} = res;
+    const {message, status, data} = res;
     return Promise.resolve({
       success: true,
-      message: statusText,
+      message,
       statusCode: status,
       ...data
     })

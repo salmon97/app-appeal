@@ -30,7 +30,7 @@ export default ({
       let {staffs}  =  yield select(_=>_.staffModel);
       let res = yield call(deleteStaff,payload);
       if(res.success){
-        staffs.splice(staffs.findIndex(item => item.id.toString===res.message),1);
+        staffs.splice(staffs.findIndex(item => item.id===res.message),1);
         yield put({
           type: 'updateState',
           payload: {

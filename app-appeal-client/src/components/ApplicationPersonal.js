@@ -8,11 +8,11 @@ import {router} from "umi";
 import {Link} from "react-router-dom";
 import DashboardLayout from "./DashboardLayout";
 
-class ApplicationCom extends Component {
+class ApplicationPersonal extends Component {
   render() {
     const {applications, changePage, mainApplication, showMainApplicationModal, totalElements, totalPages, size, deleteApplication, openMainApplic} = this.props;
     return (
-      <div className="container-fluid mt-2">
+      <div className="container mt-2">
 
         <div className="row">
           <div className="col-md-12">
@@ -21,11 +21,11 @@ class ApplicationCom extends Component {
               <tr>
                 <th>№</th>
                 <th>дата</th>
-                <th>тел номер</th>
+                {/*<th>тел номер</th>*/}
                 <th>қаердан</th>
-                <th>категоря</th>
-                <th>худуд</th>
-                <th>код</th>
+                {/*<th>категоря</th>*/}
+                {/*<th>худуд</th>*/}
+                {/*<th>код</th>*/}
                 <th>статус</th>
                 <th>мурожаати</th>
                 <th>Action</th>
@@ -36,11 +36,11 @@ class ApplicationCom extends Component {
                 <tr key={item.id}>
                   <td>{i + 1}</td>
                   <td>{item.created_at}</td>
-                  <td>{item.phoneNumber}</td>
+                  {/*<td>{item.phoneNumber}</td>*/}
                   <td>{item.source}</td>
-                  <td>{item.category}</td>
-                  <td>{item.district}</td>
-                  <td>{item.code}</td>
+                  {/*<td>{item.category}</td>*/}
+                  {/*<td>{item.district}</td>*/}
+                  {/*<td>{item.code}</td>*/}
                   <td>{item.status === 'CHECKED' ? 'ёпилган' : item.status === 'NO_CHECKED' ? 'ёпилмаган' : item.status === 'NO_RECEIVE' ? 'қабул қилинмаган' : item.status === 'RECEIVE' ? 'қабул қилинган' : 'якунланмаган'}</td>
                   <td>
                     <button className="btn btn-success text-light" onClick={() => openMainApplic(item)}>open</button>
@@ -125,6 +125,6 @@ class ApplicationCom extends Component {
   }
 }
 
-ApplicationCom.propTypes = {};
+ApplicationPersonal.propTypes = {};
 
-export default ApplicationCom;
+export default ApplicationPersonal;

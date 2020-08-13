@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from "reactstrap";
+import {Button, Modal, ModalBody, ModalFooter, Table} from "reactstrap";
 import {AvField, AvForm} from 'availity-reactstrap-validation';
 import {AiFillEdit, RiDeleteBin5Line} from "react-icons/all";
 
@@ -11,6 +10,10 @@ class Staffs extends Component {
 
     return (
       <div className="container mt-2">
+        {/*<Tabs id="tabs++" activeKey="staff" >*/}
+
+        {/*  */}
+        {/*</Tabs>*/}
         <div className="row">
           <div className="col-md-12">
             <Table className="table-dark">

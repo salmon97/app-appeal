@@ -1,14 +1,12 @@
 package murojat.appmurojat.bot;
 
-import murojat.appmurojat.entity.ChildAdmin;
-import murojat.appmurojat.entity.Staff;
 import murojat.appmurojat.entity.Murojaatlar;
-import murojat.appmurojat.entity.User;
+import murojat.appmurojat.entity.Staff;
 import murojat.appmurojat.entity.enums.Status;
 import murojat.appmurojat.payload.ResMurojaat;
 import murojat.appmurojat.repository.ChildAdminRepository;
-import murojat.appmurojat.repository.StaffRepository;
 import murojat.appmurojat.repository.MurojaatlarRepository;
+import murojat.appmurojat.repository.StaffRepository;
 import murojat.appmurojat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -25,12 +23,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import javax.websocket.SendResult;
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 public class MurojaatBot extends TelegramLongPollingBot {
+
     @Autowired
     BotService botService;
 
@@ -58,9 +57,26 @@ public class MurojaatBot extends TelegramLongPollingBot {
 
     String resMurojaatId = "";
 
+    String text = "";
+
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage sendMessage = new SendMessage();
+        if (update.hasInlineQuery()) {
+            level = 0;
+            if (update.getInlineQuery().hasQuery()) {
+                text = update.getInlineQuery().getQuery();
+                if (text.endsWith("#")) {
+                    text = text.substring(0, text.lastIndexOf("#"));
+                    try {
+                        execute(childAdminBotService.inlineQuery(update, text));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
         if (update.hasMessage()) {
             Message message = update.getMessage();
             if (message.hasText()) {
@@ -116,6 +132,7 @@ public class MurojaatBot extends TelegramLongPollingBot {
             if (level == 2 && Constant.ULUGNOR_T.equals(data)) level = 3;
             if (level == 2 && Constant.XOJABOD_T.equals(data)) level = 3;
             if (level == 2 && Constant.SHAXRIXON_T.equals(data)) level = 3;
+            if (level == 2 && Constant.QORGONTEPA_T.equals(data)) level = 3;
             if (level == 3 && Constant.GAZ.equals(data)) level = 4;
             if (level == 3 && Constant.SUV.equals(data)) level = 4;
             if (level == 3 && Constant.UY_JOY.equals(data)) level = 4;
@@ -142,6 +159,13 @@ public class MurojaatBot extends TelegramLongPollingBot {
                 //handle the case where string is not valid UUID
             }
             String[] split = data.split("/");
+            if (split[0].equals(Constant.RECEIVE_QUERY) && murojaatlarRepository.existsById(UUID.fromString(split[1]))) {
+                try {
+                    execute(childAdminBotService.queryRecive(update, split[1]));
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
             if (Constant.MAMNUNMAN.equals(split[0])) botService.mamnunVsMamnunmemas(split[1], Status.CHECKED);
             if (Constant.MAMNUNEMASMAN.equals(split[0])) botService.mamnunVsMamnunmemas(split[1], Status.NO_CHECKED);
         }
@@ -152,6 +176,7 @@ public class MurojaatBot extends TelegramLongPollingBot {
                     sendMessage.setText("сиз алла қачон ройҳатдан ўткансиз");
                     try {
                         execute(sendMessage);
+                        execute(childAdminBotService.startMurojaatAdmin(update));
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
@@ -230,6 +255,7 @@ public class MurojaatBot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                 }
+                level = 0;
                 break;
             case 1:
                 if (update.hasCallbackQuery()) {
@@ -384,7 +410,6 @@ public class MurojaatBot extends TelegramLongPollingBot {
                 level = 0;
                 break;
             case 13:
-
                 InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
                 List<List<InlineKeyboardButton>> replyKeyboarbuttons = new ArrayList<>();
                 List<InlineKeyboardButton> inlineKeyboardButtonList1 = new ArrayList<>();
@@ -418,6 +443,7 @@ public class MurojaatBot extends TelegramLongPollingBot {
                 break;
         }
     }
+
 
     @Scheduled(cron = "0 0 8 * * *")
     public void getThreeDays() {
@@ -566,6 +592,7 @@ public class MurojaatBot extends TelegramLongPollingBot {
             }
         }
     }
+
 
     public boolean sendMurojaat(Update update, Murojaatlar murojaatlar) throws TelegramApiException {
         ResMurojaat resMurojaat = botService.resMurojaat(update, murojaatlar);

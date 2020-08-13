@@ -31,18 +31,18 @@ public class MurojaatlarController {
     @Autowired
     FileMurojaatRepository fileMurojaatRepository;
 
-    @GetMapping("/applications")
+    @GetMapping("/applications/{source}")
     public HttpEntity<?> searchCompany(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                       @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        ResPageable resPageable = murojaatlarService.pageableDetails(page, size);
+                                       @RequestParam(value = "size", defaultValue = "10") Integer size,@PathVariable String source) {
+        ResPageable resPageable = murojaatlarService.pageableDetails(page, size,source);
         return ResponseEntity.ok(resPageable);
     }
 
     @DeleteMapping("/deleteApplication/{id}")
     public HttpEntity<?> delete(@PathVariable UUID id) {
         if (murojaatlarRepository.existsById(id)) {
-            UUID uuid = murojaatlarService.deleteStaff(id);
-            return ResponseEntity.ok(new ApiResponse(uuid.toString(), true));
+            murojaatlarService.deleteAppliction(id);
+            return ResponseEntity.ok(new ApiResponse(id.toString(), true));
         }
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
     }
