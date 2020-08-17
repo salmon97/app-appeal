@@ -51,7 +51,7 @@ public class BotService {
     @Value("${upload.folder}")
     private String uploadFolder;
 
-    public void mamnunVsMamnunmemas(String id,Status status){
+    public void mamnunVsMamnunmemas(String id, Status status) {
         Murojaatlar murojaatlar = murojaatlarRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("getMurojaat"));
         murojaatlar.setStatus(status);
         murojaatlarRepository.save(murojaatlar);
@@ -75,7 +75,7 @@ public class BotService {
     }
 
 
-    public SendMessage checkCloseApplication(Long chatId,String id) {
+    public SendMessage checkCloseApplication(Long chatId, String id) {
         SendMessage sendMessage = new SendMessage()
                 .setChatId(chatId)
                 .setText(Constant.CLOSE_APPLICATION)
@@ -84,9 +84,9 @@ public class BotService {
         List<List<InlineKeyboardButton>> lists = new ArrayList<>();
         List<InlineKeyboardButton> list = new ArrayList<>();
         InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton(Constant.MAMNUNMAN);
-        inlineKeyboardButton.setCallbackData(Constant.MAMNUNMAN+"/"+id);
+        inlineKeyboardButton.setCallbackData(Constant.MAMNUNMAN + "/" + id);
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(Constant.MAMNUNEMASMAN);
-        inlineKeyboardButton1.setCallbackData(Constant.MAMNUNEMASMAN+"/"+id);
+        inlineKeyboardButton1.setCallbackData(Constant.MAMNUNEMASMAN + "/" + id);
         list.add(inlineKeyboardButton);
         list.add(inlineKeyboardButton1);
         lists.add(list);
@@ -288,7 +288,7 @@ public class BotService {
         if (message.hasText()) {
             murojaatlar.setMurojaatText(message.getText());
         }
-        if (message.getCaption() != null){
+        if (message.getCaption() != null) {
             murojaatlar.setMurojaatText(message.getCaption());
         }
         if (message.hasPhoto()) {
@@ -350,7 +350,11 @@ public class BotService {
             org.telegram.telegrambots.meta.api.objects.File resFile = murojaatBot.execute(getFile);
             fileMurojaat.setExtension(getExt(resFile.getFilePath()));
             fileMurojaatRepository.save(fileMurojaat);
-            downloadFile(fileMurojaat, resFile.getFilePath(), resFile.getFileSize());
+            try {
+                downloadFile(fileMurojaat, resFile.getFilePath(), resFile.getFileSize());
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
         murojaatlar.setStatus(Status.NO_RECEIVE);
         num++;

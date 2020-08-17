@@ -26,16 +26,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ChildAdminBotService {
@@ -61,35 +59,40 @@ public class ChildAdminBotService {
     @Autowired
     FileMurojaatRepository fileMurojaatRepository;
 
-    public EditMessageReplyMarkup queryRecive(Update update,String id){
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> replyKeyboarbuttons = new ArrayList<>();
-        List<InlineKeyboardButton> inlineKeyboardButtonList1 = new ArrayList<>();
-        InlineKeyboardButton inlineButton = new InlineKeyboardButton("қабул килдим");
-        inlineButton.setCallbackData("data0001");
-        inlineKeyboardButtonList1.add(inlineButton);
-        replyKeyboarbuttons.add(inlineKeyboardButtonList1);
-        inlineKeyboardMarkup.setKeyboard(replyKeyboarbuttons);
-        EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
-        System.out.println(update.getCallbackQuery());
+    public void queryRecive(Update update, String id) {
+        Murojaatlar murojaatlar = murojaatlarRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("getMurojaat"));
+        if (murojaatlar.getChatId() != update.getCallbackQuery().getFrom().getId().longValue()) {
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+            List<List<InlineKeyboardButton>> replyKeyboarbuttons = new ArrayList<>();
+            List<InlineKeyboardButton> inlineKeyboardButtonList1 = new ArrayList<>();
+            InlineKeyboardButton inlineButton = new InlineKeyboardButton("қабул килдим");
+            inlineButton.setCallbackData("data0001");
+            inlineKeyboardButtonList1.add(inlineButton);
+            replyKeyboarbuttons.add(inlineKeyboardButtonList1);
+            inlineKeyboardMarkup.setKeyboard(replyKeyboarbuttons);
+            EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
 //        editMessageReplyMarkup.setChatId(update.getCallbackQuery().getMessage().getChatId());
 //        editMessageReplyMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
-        editMessageReplyMarkup.setInlineMessageId(update.getCallbackQuery().getInlineMessageId());
-        editMessageReplyMarkup.setReplyMarkup(inlineKeyboardMarkup);
-        Murojaatlar murojaatlar = murojaatlarRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("getMurojaat"));
-        murojaatlar.setStatus(Status.RECEIVE);
-        murojaatlarRepository.save(murojaatlar);
-        return editMessageReplyMarkup;
+            editMessageReplyMarkup.setInlineMessageId(update.getCallbackQuery().getInlineMessageId());
+            editMessageReplyMarkup.setReplyMarkup(inlineKeyboardMarkup);
+            murojaatlar.setStatus(Status.RECEIVE);
+            murojaatlarRepository.save(murojaatlar);
+            try {
+                murojaatBot.execute(editMessageReplyMarkup);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public AnswerInlineQuery inlineQuery(Update update,String text) {
+    public AnswerInlineQuery inlineQuery(Update update, String text) {
         InlineQueryResultArticle r2 = new InlineQueryResultArticle();
         r2.setThumbUrl("https://lh3.googleusercontent.com/proxy/JY51Lom4L6hmW7d0DzBfnxPtQaXmGmP-FWZbRw-c3RyOqbqIIGL10oVlEPZ5021etF7Tgajjp3PYjxffFJ7iGX_P");
         r2.setTitle("мурожаат йўллаш");
         r2.setId("1");
         r2.setDescription("мурожаат йўллаш учун устига босингг");
         r2.setInputMessageContent(new InputTextMessageContent().setMessageText(text));
-        r2.setReplyMarkup(murojaatSave(text));
+        r2.setReplyMarkup(murojaatSave(text, update.getInlineQuery().getFrom().getId()));
         List<InlineQueryResult> inlineQueryResults = new ArrayList<>();
         inlineQueryResults.add(r2);
         AnswerInlineQuery answerInlineQuery = new AnswerInlineQuery();
@@ -98,18 +101,19 @@ public class ChildAdminBotService {
         return answerInlineQuery;
     }
 
-    public InlineKeyboardMarkup murojaatSave(String text) {
+    public InlineKeyboardMarkup murojaatSave(String text, Integer chatId) {
         Murojaatlar murojaatlar = new Murojaatlar();
         murojaatlar.setMurojaatText(text);
         murojaatlar.setStatus(Status.NO_RECEIVE);
         murojaatlar.setSource(Constant.PERSONAL);
+        murojaatlar.setChatId(Long.valueOf(chatId));
         murojaatlar.setMurojaatText(murojaatlar.getMurojaatText());
         murojaatlarRepository.save(murojaatlar);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> replyKeyboarbuttons = new ArrayList<>();
         List<InlineKeyboardButton> inlineKeyboardButtonList1 = new ArrayList<>();
         InlineKeyboardButton b = new InlineKeyboardButton(Constant.RECEIVE);
-        b.setCallbackData(Constant.RECEIVE_QUERY +"/"+ murojaatlar.getId().toString());
+        b.setCallbackData(Constant.RECEIVE_QUERY + "/" + murojaatlar.getId().toString());
         inlineKeyboardButtonList1.add(b);
         replyKeyboarbuttons.add(inlineKeyboardButtonList1);
         inlineKeyboardMarkup.setKeyboard(replyKeyboarbuttons);
