@@ -65,7 +65,7 @@ public class ChildAdminBotService {
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> replyKeyboarbuttons = new ArrayList<>();
             List<InlineKeyboardButton> inlineKeyboardButtonList1 = new ArrayList<>();
-            InlineKeyboardButton inlineButton = new InlineKeyboardButton("қабул килдим");
+            InlineKeyboardButton inlineButton = new InlineKeyboardButton("қабул килинди");
             inlineButton.setCallbackData("data0001");
             inlineKeyboardButtonList1.add(inlineButton);
             replyKeyboarbuttons.add(inlineKeyboardButtonList1);
