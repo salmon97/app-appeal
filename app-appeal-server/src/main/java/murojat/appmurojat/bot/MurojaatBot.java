@@ -160,11 +160,7 @@ public class MurojaatBot extends TelegramLongPollingBot {
             }
             String[] split = data.split("/");
             if (split[0].equals(Constant.RECEIVE_QUERY) && murojaatlarRepository.existsById(UUID.fromString(split[1]))) {
-                try {
-                    execute(childAdminBotService.queryRecive(update, split[1]));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                childAdminBotService.queryRecive(update, split[1]);
             }
             if (Constant.MAMNUNMAN.equals(split[0])) botService.mamnunVsMamnunmemas(split[1], Status.CHECKED);
             if (Constant.MAMNUNEMASMAN.equals(split[0])) botService.mamnunVsMamnunmemas(split[1], Status.NO_CHECKED);

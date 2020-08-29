@@ -75,7 +75,7 @@ class CabinetCompanent extends Component {
           <div className="col-md-3">
             <div className="cardd">
               <div className="card-class" id="adminTotalClients">
-                <span className="font-weight-bold">Ko'rilyotgan Murojaatlar Soni</span>
+                <span className="font-weight-bold">Qabul Qiningan Murojaatlar Soni</span>
                 <div className="d-flex justify-content-around mt-2">
                   <AiOutlineFileText className="iconDashboard"/>
                   <h2 className="font-weight-bold">{murojaatlarCheckingNow}</h2>

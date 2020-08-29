@@ -31,7 +31,7 @@ public class DataLoader implements CommandLineRunner {
                             "SuperAdmin",
                             "superAdminMurojaat@gmail.com",
                             "+998931234567",
-                            passwordEncoder.encode("root123"),
+                            passwordEncoder.encode("murojaat_123"),
                             new HashSet<>(roleRepository.findAll())
                     )
             );
