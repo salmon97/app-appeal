@@ -62,16 +62,18 @@ class Cabinet extends Component {
         return (
             <div>
                 <DashboardLayout>
+                  <div className="container">
                     <Staffs
-                        staff={staff}
-                        edit={edit}
-                        openModal={openModal}
-                        showModal={showModal}
-                        staffs={staffs}
-                        openDeleteModal={openDeleteModal}
-                        showDeleteModal={showDeleteModal}
-                        deleteStaff={deleteStaff}
+                      staff={staff}
+                      edit={edit}
+                      openModal={openModal}
+                      showModal={showModal}
+                      staffs={staffs}
+                      openDeleteModal={openDeleteModal}
+                      showDeleteModal={showDeleteModal}
+                      deleteStaff={deleteStaff}
                     />
+                  </div>
                 </DashboardLayout>
             </div>
         );

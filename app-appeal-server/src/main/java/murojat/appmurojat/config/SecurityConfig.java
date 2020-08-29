@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.ws.rs.HttpMethod;
 import java.util.Properties;
 
 @Configuration
@@ -77,29 +78,70 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-
                 .cors()
                 .and()
                 .csrf()
                 .disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtErrors)
+//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
-                .anyRequest()
-                .authenticated();
-
-//        //MANA SHU YERDA YO'LLAR TOKENGA QARAB OCHILADI
-        http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/",
+                        "/favicon.ico",
+                        "//*.png",
+                        "//*.gif",
+                        "//*.svg",
+                        "//*.jpg",
+                        "//*.html",
+                        "//*.css",
+                        "//*.js")
+                .permitAll()
+                .antMatchers("/api/file/get/",
+                        "/api/auth/signIn",
+                        "/api/auth/signUp",
+                        "/api/user/tutors",
+                        "/api/course",
+                        "/api/course/byCategory/",
+                        "/api/category",
+                        "/api/lesson",
+                        "/api/lesson/byId/",
+                        "/api/faq/category",
+                        "/api/faq"
+                ).permitAll()
+                .antMatchers(HttpMethod.POST, "/api/partner").permitAll()
+                .antMatchers("/**").permitAll();
     }
+
+
+
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//
+//                .cors()
+//                .and()
+//                .csrf()
+//                .disable()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(jwtErrors)
+//                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/api/**").permitAll()
+//                .anyRequest()
+//                .authenticated();
+//
+////        //MANA SHU YERDA YO'LLAR TOKENGA QARAB OCHILADI
+//        http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+//    }
 }
 
 

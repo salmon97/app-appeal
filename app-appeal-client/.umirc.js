@@ -18,7 +18,6 @@ export default {
       dynamicImport: {webpackChunkName: true},
       title: 'app-murojaat-client',
       dll: false,
-
       routes: {
         exclude: [
           /models\//,
@@ -30,4 +29,11 @@ export default {
       },
     }],
   ],
+  // proxy: {
+  //   "/api": {
+  //     "target": "http://localhost/",
+  //     "changeOrigin": true
+  //   }
+  // },
+  // outputPath: '../app-appeal-server/src/main/resources/static'
 }
