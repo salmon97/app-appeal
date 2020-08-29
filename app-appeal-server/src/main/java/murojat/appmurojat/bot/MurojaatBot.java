@@ -604,12 +604,12 @@ public class MurojaatBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "mening_murojaatim_bot";
+        return "**************************";
     }
 
     @Override
     public String getBotToken() {
-        return "1188427740:AAEuOa9BEeYfW0g7MCWXCSyo8ApYZry7d5A";
+        return "**************************************";
     }
 
 }
